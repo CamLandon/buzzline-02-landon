@@ -11,11 +11,11 @@ for message in consumer:
 
     print(f"🔹 Encounter: {encounter}")
 
-    if event_type == "combat":
-        print("⚔️ Prepare for battle!")
-    elif event_type == "loot":
-        print("💰 Rolling for loot...")
-    elif event_type == "npc":
-        print("🗣️ What do you do?")
-    elif event_type == "world":
-        print("🌍 You turn to your compatriots and...")
+    if "COMBAT" in encounter:
+        print("⚔️ Prepare for battle! Roll for initiative!")
+    elif "LOOT" in encounter:
+        print("💰 Have you ever seen such treasure?")
+    elif "NPC" in encounter:
+        print("🗣️ What is your reply?")
+    elif "WORLD" in encounter:
+        print("🌍 You turn to your companions and..." )
