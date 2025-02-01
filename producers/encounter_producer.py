@@ -1,5 +1,5 @@
 """
-encounter_producer.py
+kafka_producer_case.py
 
 Produce some streaming buzz strings and send them to a Kafka topic.
 """
@@ -12,6 +12,14 @@ Produce some streaming buzz strings and send them to a Kafka topic.
 import os
 import sys
 import time
+import random
+
+from kafka import KafkaProducer
+
+producer = KafkaProducer(
+    boostrap_servers="localhost:9092",
+    value_serializer=lambda v: v.encode("utf-8"),
+)
 
 # Import external packages
 from dotenv import load_dotenv
@@ -37,7 +45,7 @@ load_dotenv()
 
 def get_kafka_topic() -> str:
     """Fetch Kafka topic from environment or use default."""
-    topic = os.getenv("KAFKA_TOPIC", "buzz_topic")
+    topic = os.getenv("encounter", "buzz_topic")
     logger.info(f"Kafka topic: {topic}")
     return topic
 
@@ -64,20 +72,20 @@ def generate_messages(producer, topic, interval_secs):
         interval_secs (int): Time in seconds between sending messages.
 
     """
-    string_list: list = [
-        "I love Python!",
-        "Kafka is awesome.",
-        "Streaming data is fun.",
-        "This is a buzz message.",
-        "Have a great day!",
-    ]
-    try:
-        while True:
-            for message in string_list:
-                logger.info(f"Generated buzz: {message}")
-                producer.send(topic, value=message)
-                logger.info(f"Sent message to topic '{topic}': {message}")
-                time.sleep(interval_secs)
+    encounters = [
+    "COMBAT: A goblin ambushes!",
+    "COMBAT: A dragon appears!",
+    "LOOT: You find a treasure chest.",
+    "LOOT: A magical sword lies in the ruins.",
+    "NPC: A mysterious stranger offers a quest.",
+    "NPC: A town guard warns you about bandits.",
+]
+
+while True:
+    encounter = random.choice(encounters)
+    producer.send(topic, value=encounter)
+    print(f"Sent: {encounter}")
+    time.sleep(2)  # Send an encounter every 2 seconds
     except KeyboardInterrupt:
         logger.warning("Producer interrupted by user.")
     except Exception as e:
